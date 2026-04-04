@@ -570,12 +570,49 @@ body {
    RESPONSIVE
    ============================================================ */
 @media (max-width: 600px) {
-  :root { --cell-h: 58px; --sidebar-w: 40px; }
-  .course-card .cn  { font-size: 10px; }
+  :root { --cell-h: 58px; --sidebar-w: 36px; }
+  
+  .course-card .cn  { font-size: 9px; }
   .course-card .cr  { display: none; }
   .period-lbl .pt   { display: none; }
-  .period-lbl .pn   { font-size: 14px; }
-  .main-content     { padding: 10px 10px 40px; }
-  .stats-panel      { flex-direction: column; align-items: flex-start; }
-  .popup-glass      { width: 240px; }
+  .period-lbl .pn   { font-size: 13px; }
+  .main-content     { padding: 8px 8px 40px; }
+  
+  /* stats-panelを2行に */
+  .stats-panel {
+    flex-wrap: wrap;
+    border-radius: 18px;
+    padding: 8px 10px;
+    gap: 8px;
+  }
+  
+  .sem-row { flex-wrap: nowrap; }
+  
+  .stats-chips {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .stats-panel .credit-pill {
+    order: 4;
+    width: 100%;
+    justify-content: center;
+    margin-left: 0;
+    padding: 6px 0;
+  }
+
+  /* day headerを短く */
+  .day-hd { font-size: 10px; }
+
+  /* sem-pillを小さく */
+  .sem-pill {
+    font-size: 11px;
+    padding: 4px 10px;
+  }
+
+  .year-select {
+    font-size: 12px;
+    padding: 4px 10px;
+  }
 }
