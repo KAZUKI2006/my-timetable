@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timetable</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============================================================
+     NAVBAR
+     ============================================================ -->
+<nav class="navbar" id="navbar">
+  <div class="navbar-inner">
+
+    <!-- 左: アイコン -->
+    <div class="navbar-side navbar-left">
+      <div class="navbar-icon">
+        <div class="navbar-icon">
+          <img src="Logo.PNG" style="width:35px; height:35px; object-fit:contain;">
+        </div>
+      </div>
+    </div>
+
+    <!-- 中央: タイトル -->
+    <div class="navbar-center">
+      <span class="navbar-title">Timetable</span>
+    </div>
+
+    <!-- 右: 単位ピル -->
+    <div class="navbar-side navbar-right">
+      <div class="credit-pill">credit <b id="total-credits">0</b></div>
+    </div>
+
+  </div>
+</nav>
+
+<!-- ============================================================
+     MAIN
+     ============================================================ -->
+<div class="main-content">
+
+  <!-- Stats + Semester switcher -->
+  <div class="stats-panel">
+    <div class="sem-row">
+      <select class="year-select" onchange="switchYear(parseInt(this.value))">
+      <option value="1">the 2024 (1st)</option>
+      <option value="2">the 2025 (2nd)</option>
+      <option value="3" selected>the 2026 (3rd)</option>
+      <option value="4">the 2027 (4th)</option>
+    </select>
+      <div class="sem-pill active" onclick="switchSem(0)">spring</div>
+      <div class="sem-pill"        onclick="switchSem(1)">autumn</div>
+    </div>
+    <div class="stats-chips">
+      <div class="stat-chip">class <b id="cnt-courses">0</b></div>
+      <div class="stat-sep">|</div>
+      <div class="stat-chip">compulsory <b id="cnt-required">0</b></div>
+      <div class="stat-chip">optional <b id="cnt-elective">0</b></div>
+      <div class="stat-sep">|</div>
+      <div class="stat-chip">credit <b id="cnt-credits">0</b></div>
+    </div>
+    <span class="credit-pill">full-year <b id="cnt-fullyear">0</b> credits</span>
+  </div>
+
+  <!-- Timetable -->
+  <div class="tt-wrap">
+    <div class="tt-grid" id="tt-grid"></div>
+  </div>
+
+  <!-- On-demand セクション -->
+  <div class="od-wrap">
+    <div class="od-header">On-demand</div>
+    <div class="od-cards" id="od-cards"></div>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ============================================================
+     TOOLTIP
+     ============================================================ -->
+<div class="pref-tooltip" id="tooltip">
+  <div class="tooltip-glass">
+    <div class="tip-name" id="tip-name"></div>
+    <div class="tip-sub"  id="tip-room"></div>
+    <div class="tip-badge">
+      <div class="tip-dot" id="tip-dot"></div>
+      <span id="tip-type"></span>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     POPUP
+     ============================================================ -->
+<div id="popup-overlay"></div>
+<div class="popup-wrap" id="popup-wrap">
+  <div class="popup-glass">
+
+    <button class="popup-close" onclick="closePopup()">✕</button>
+    <div class="popup-slot-info" id="popup-slot-info"></div>
+    <h3 id="popup-title">授業を追加</h3>
+
+    <label>科目名 <span style="color:#E24B4A">＊</span></label>
+    <input id="f-name"    type="text" placeholder="例：憲法"    maxlength="20">
+
+    <!-- 科目名と教室の間に追加 -->
+    <label>クラス</label>
+    <input id="f-class" type="text" placeholder="例：Aクラス" maxlength="12">
+
+    <label>教室</label>
+    <input id="f-room"    type="text" placeholder="例：A101"    maxlength="12">
+
+    <label>担当教員</label>
+    <input id="f-teacher" type="text" placeholder="例：田中先生" maxlength="16">
+
+    <label>単位数</label>
+    <select id="f-credits">
+      <option value="1">1 credit</option>
+      <option value="2" selected>2 credits</option>
+      <option value="4">4 credits</option>
+    </select>
+
+    <label>種別</label>
+    <select id="f-type">
+      <option value="required">compulsory</option>
+      <option value="elective">optional</option>
+      <option value="free">outside</option>
+    </select>
+
+    <div class="popup-actions">
+      <button class="btn-cancel" onclick="closePopup()">cancel</button>
+      <button class="btn-delete" id="btn-delete" onclick="deleteCourse()" style="display:none">delete</button>
+      <button class="btn-save"   onclick="saveCourse()">save</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================
+     SCRIPT
+     ============================================================ -->
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,581 @@
+/* ============================================================
+   BASE & RESET
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --accent:       #534AB7;
+  --accent-dark:  #3C3489;
+  --accent-light: rgba(238,237,254,0.85);
+  --cell-h:       72px;
+  --sidebar-w:    54px;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+  background: url('zootopia_bg.jpg') center center / cover no-repeat fixed;
+  /* background: url('bg.jpg') center/cover no-repeat fixed; */
+  min-height: 150vh;
+  color: #1d1d1f;
+  padding-top: 68px;
+}
+
+/* ============================================================
+   NAVBAR — 都道府県サイトと完全同一のscroll-shrink動作
+   ============================================================ */
+.navbar {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 900px;
+  z-index: 1000;
+  transition: width 0.45s cubic-bezier(0.4,0,0.2,1),
+              max-width 0.45s cubic-bezier(0.4,0,0.2,1);
+}
+.navbar.scrolled {
+  width: auto;
+  max-width: 260px;
+}
+.navbar-inner {
+  display: flex;
+  align-items: center;
+  padding: 12px 18px;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(7px) saturate(100%) brightness(1.08);
+  -webkit-backdrop-filter: blur(7px) saturate(100%) brightness(1.08);
+  border: 1px solid rgba(255,255,255,0.52);
+  border-radius: 999px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08), 0 1px 0 rgba(255,255,255,0.8) inset;
+  position: relative;
+  overflow: hidden;
+  transition: padding 0.4s ease, border-radius 0.4s ease;
+  gap: 0;
+}
+.navbar-inner::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 50% 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.10) 0%, transparent 100%);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.navbar-side {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  flex-shrink: 0;
+  transition: width 0.4s cubic-bezier(0.4,0,0.2,1),
+              opacity 0.25s ease,
+              margin 0.4s ease;
+  width: 34px;
+}
+.navbar-left  { justify-content: flex-start; }
+.navbar-right { justify-content: flex-end; width: 90px; }
+
+.navbar.scrolled .navbar-side {
+  width: 0 !important;
+  opacity: 0;
+  margin: 0;
+}
+
+.navbar-icon {
+  width: 30px; height: 30px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.navbar-icon svg { width: 22px; height: 22px; }
+
+.navbar-center {
+  flex: 1;
+  text-align: center;
+  min-width: 0;
+  overflow: hidden;
+}
+.navbar-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1d1d1f;
+  letter-spacing: -0.2px;
+  white-space: nowrap;
+  transition: font-size 0.35s ease;
+  display: inline-block;
+  position: relative;
+}
+.navbar.scrolled .navbar-title { font-size: 14px; }
+.navbar.scrolled .navbar-inner { padding: 10px 22px; border-radius: 999px; }
+
+.credit-pill {
+  background: rgba(83,74,183,0.12);
+  border: 0.5px solid rgba(83,74,183,0.25);
+  border-radius: 20px;
+  padding: 4px 11px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.credit-pill b { font-size: 14px; color: var(--accent-dark); }
+
+.stats-panel .credit-pill {
+  margin-left: auto;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0 10px;
+  gap: 4px;
+}
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+.main-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 16px 16px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ============================================================
+   STATS PANEL
+   ============================================================ */
+.stats-panel {
+  background: rgba(255,255,255,0.22);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255,255,255,0.56);
+  border-radius: 999px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.07), 0 1px 0 rgba(255,255,255,0.85) inset;
+  padding: 5px 5px; /* 左右とも小さく */
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.stats-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 60% 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.3) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+.stats-chips {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  background: rgba(255,255,255,0.55);
+  border: 0.5px solid rgba(255,255,255,0.8);
+  border-radius: 999px;
+  padding: 5px 8px;
+}
+
+.stat-sep {
+  color: rgba(83,74,183,0.3);
+  font-size: 11px;
+  padding: 0 2px;
+}
+
+.stat-chip {
+  padding: 3px 8px;
+  font-size: 12px;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.stat-chip b { color: var(--accent-dark); font-weight: 600; font-size: 14px; }
+
+.sem-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+  position: relative;
+  padding: 0 2px; /* ← 追加 */
+}
+.sem-pill {
+  font-size: 12px;
+  padding: 5px 14px;
+  border-radius: 20px;
+  border: 0.5px solid rgba(83,74,183,0.25);
+  cursor: pointer;
+  background: rgba(255,255,255,0.5);
+  color: rgba(60,52,137,0.7);
+  font-weight: 500;
+  transition: all 0.15s;
+  user-select: none;
+}
+.sem-pill:hover  { background: rgba(238,237,254,0.8); color: var(--accent); }
+.sem-pill.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* sem-pillのスタイルの下に追加 */
+.year-select {
+  font-size: 14px;
+  padding: 6px 18px;
+  border-radius: 20px;
+  border: 0.5px solid rgba(83,74,183,0.25);
+  cursor: pointer;
+  background: rgba(255,255,255,0.5);
+  color: #1a6a9a;
+  font-weight: 600;
+  font-family: inherit;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+/* ============================================================
+   TIMETABLE
+   ============================================================ */
+.tt-wrap {
+  background: rgba(255,255,255,0.10);
+  backdrop-filter: blur(16px) saturate(100%);
+  -webkit-backdrop-filter: blur(16px) saturate(100%);
+  border: 1px solid rgba(255,255,255,0.46);
+  border-radius: 18px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.07), 0 1px 0 rgba(255,255,255,0.7) inset;
+  overflow: hidden;
+  position: relative;
+}
+.tt-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 65% 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.28) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+.tt-grid {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) repeat(6, 1fr);
+  position: relative;
+  z-index: 2;
+}
+
+.od-wrap {
+  background: rgba(255,255,255,0.35);
+  backdrop-filter: blur(16px) saturate(100%);
+  -webkit-backdrop-filter: blur(16px) saturate(100%);
+  border: 0.5px solid rgba(255,255,255,0.1);
+  border-radius: 18px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.07), 0 1px 0 rgba(255,255,255,0.7) inset;
+  padding: 14px 16px;
+  overflow: hidden;
+  position: relative;
+}
+.od-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 60% 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.10) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.od-header {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.716);
+  margin-bottom: 10px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.od-cards {
+  display: flex;
+  gap: 8px;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.od-add-btn {
+  width: 72px;
+  height: 72px;
+  border-radius: 11px;
+  border: 1px dashed rgba(83,74,183,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: rgba(83,74,183,0.4);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.12s, color 0.12s;
+}
+.od-add-btn:hover {
+  background: rgba(238,237,254,0.6);
+  color: var(--accent);
+}
+
+.day-hd {
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: #212121;
+  background: rgba(238,237,254,0.45);
+  border-bottom: 0.5px solid rgba(175,169,236,0.3);
+}
+.day-hd:first-child {
+  color: rgba(0, 0, 0, 0.479);
+  background: rgba(241,239,232,0.3);
+  font-size: 11px;
+  font-weight: 400;
+}
+.sat-hd { color: #5288eb; }
+
+.period-lbl {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: var(--cell-h);
+  font-size: 10px;
+  color: rgba(0, 0, 0, 0.536);
+  background: rgba(241,239,232,0.22);
+  border-right: 0.5px solid rgba(175,169,236,0.18);
+  border-bottom: 0.5px solid rgba(175,169,236,0.12);
+  gap: 2px;
+  user-select: none;
+}
+.period-lbl .pn { font-size: 18px; font-weight: 600; color: rgba(0, 0, 0, 0.726); }
+.period-lbl .pt { font-size: 9px; text-align: center; line-height: 1.45; }
+
+.tt-cell {
+  height: var(--cell-h);
+  border-right: 0.5px solid rgba(175,169,236,0.12);
+  border-bottom: 0.5px solid rgba(175,169,236,0.1);
+  padding: 4px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.tt-cell:last-child { border-right: none; }
+.tt-cell.empty:hover { background: rgba(238,237,254,0.4); }
+
+.course-card {
+  width: 100%; height: 100%;
+  border-radius: 11px;
+  padding: 5px 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  padding-right: 16px; /* ← 追加 */
+  position: relative;
+  overflow: hidden;
+  transition: filter 0.15s, transform 0.12s;
+  border: 0.5px solid rgba(255,255,255,0.4);
+  box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+}
+.course-card:hover { filter: brightness(1.05); transform: scale(1.025); }
+.course-card .cn { font-size: 11.5px; font-weight: 600; line-height: 1.3; color: #1d1d1f; }
+.course-card .cr { font-size: 10px; color: var(--accent); opacity: 0.7; }
+
+.course-card .cdot {
+  position: absolute; top: 6px; right: 7px;
+  width: 8px; height: 8px; border-radius: 50%;
+}
+
+.cc-required .cdot { background: #71b8ee; }
+.cc-elective .cdot { background: #96e065; }
+.cc-free     .cdot { background: #FAC775; }
+
+/* カラーテーマ */
+.cc-purple { background: linear-gradient(135deg,#EEEDFE,#CECBF6); }
+.cc-teal   { background: linear-gradient(135deg,#E1F5EE,#9FE1CB); }
+.cc-coral  { background: linear-gradient(135deg,#FAECE7,#F5C4B3); }
+.cc-pink   { background: linear-gradient(135deg,#FBEAF0,#F4C0D1); }
+.cc-blue   { background: linear-gradient(135deg,#E6F1FB,#B5D4F4); }
+.cc-amber  { background: linear-gradient(135deg,#FAEEDA,#FAC775); }
+.cc-green  { background: linear-gradient(135deg,#EAF3DE,#C0DD97); }
+
+/* ============================================================
+   TOOLTIP — Liquid Glass（都道府県サイトから流用）
+   ============================================================ */
+.pref-tooltip {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  transform: translateY(5px) scale(0.96);
+  transition: opacity 0.15s ease, transform 0.15s cubic-bezier(0.34,1.2,0.64,1);
+}
+.pref-tooltip.show { opacity: 1; transform: none; }
+
+.tooltip-glass {
+  background: rgba(255,255,255,0.22);
+  backdrop-filter: blur(30px) saturate(200%) brightness(1.1);
+  -webkit-backdrop-filter: blur(30px) saturate(200%) brightness(1.1);
+  border: 1px solid rgba(255,255,255,0.56);
+  border-radius: 13px;
+  padding: 8px 14px 9px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12), 0 1px 0 rgba(255,255,255,0.85) inset;
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.tooltip-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 50% 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, transparent 100%);
+  border-radius: inherit;
+  pointer-events: none;
+}
+.tip-name  { font-size: 14px; font-weight: 600; color: #1d1d1f; position: relative; }
+.tip-sub   { font-size: 11px; color: rgba(60,60,67,0.55); margin-top: 1px; position: relative; }
+.tip-badge {
+  display: inline-flex; align-items: center; gap: 3px;
+  margin-top: 4px; font-size: 11px; font-weight: 500; position: relative;
+}
+.tip-dot { width: 7px; height: 7px; border-radius: 50%; }
+
+/* ============================================================
+   POPUP — Liquid Glass（都道府県サイトから流用）
+   ============================================================ */
+.popup-wrap {
+  position: fixed;
+  z-index: 300;
+  display: none;
+}
+.popup-wrap.open { display: block; }
+
+.popup-glass {
+  background: rgba(255,255,255,0.26);
+  backdrop-filter: blur(36px) saturate(200%) brightness(1.1);
+  -webkit-backdrop-filter: blur(36px) saturate(200%) brightness(1.1);
+  border: 1px solid rgba(255,255,255,0.65);
+  border-radius: 18px;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.16), 0 1px 0 rgba(255,255,255,0.9) inset;
+  padding: 18px 20px 16px;
+  width: 270px;
+  position: relative;
+  overflow: hidden;
+  animation: popIn 0.18s cubic-bezier(0.34,1.3,0.64,1);
+}
+@keyframes popIn {
+  from { opacity:0; transform: scale(0.88) translateY(6px); }
+  to   { opacity:1; transform: scale(1)    translateY(0);   }
+}
+.popup-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 55% 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.45) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+.popup-slot-info {
+  font-size: 11px;
+  color: rgba(60,60,67,0.5);
+  margin-bottom: 4px;
+  position: relative;
+}
+.popup-glass h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1d1d1f;
+  margin-bottom: 12px;
+  position: relative;
+}
+.popup-glass label {
+  font-size: 11px;
+  color: rgba(60,60,67,0.55);
+  display: block;
+  margin: 8px 0 2px;
+  position: relative;
+}
+.popup-glass input,
+.popup-glass select {
+  width: 100%;
+  font-size: 13px;
+  padding: 7px 10px;
+  border-radius: 9px;
+  border: 0.5px solid rgba(175,169,236,0.45);
+  background: rgba(238,237,254,0.5);
+  color: #1d1d1f;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.12s, background 0.12s;
+  -webkit-appearance: none;
+  position: relative;
+}
+.popup-glass input:focus,
+.popup-glass select:focus {
+  border-color: var(--accent);
+  background: rgba(238,237,254,0.85);
+}
+
+.popup-actions {
+  display: flex;
+  gap: 7px;
+  margin-top: 14px;
+  position: relative;
+}
+.popup-actions button {
+  flex: 1;
+  padding: 8px;
+  border-radius: 10px;
+  border: 0.5px solid rgba(175,169,236,0.35);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: filter 0.12s, transform 0.1s;
+}
+.popup-actions button:active { transform: scale(0.97); }
+.btn-save   { background: var(--accent); color: #fff; border-color: var(--accent) !important; }
+.btn-save:hover   { filter: brightness(1.1); }
+.btn-cancel { background: rgba(241,239,232,0.8); color: rgba(60,60,67,0.7); }
+.btn-cancel:hover { background: rgba(210,210,200,0.9); }
+.btn-delete { background: rgba(252,235,235,0.85); color: #a32d2d; border-color: rgba(240,180,180,0.4) !important; }
+.btn-delete:hover { background: rgba(247,193,193,0.9); }
+
+.popup-close {
+  position: absolute;
+  top: 14px; right: 14px;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.06);
+  border: none;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+  color: rgba(60,60,67,0.55);
+  transition: background 0.12s;
+  z-index: 2;
+}
+.popup-close:hover { background: rgba(0,0,0,0.12); }
+
+#popup-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 299;
+}
+#popup-overlay.open { display: block; }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 600px) {
+  :root { --cell-h: 58px; --sidebar-w: 40px; }
+  .course-card .cn  { font-size: 10px; }
+  .course-card .cr  { display: none; }
+  .period-lbl .pt   { display: none; }
+  .period-lbl .pn   { font-size: 14px; }
+  .main-content     { padding: 10px 10px 40px; }
+  .stats-panel      { flex-direction: column; align-items: flex-start; }
+  .popup-glass      { width: 240px; }
+}
