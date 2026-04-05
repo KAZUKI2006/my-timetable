@@ -570,10 +570,10 @@ body {
    RESPONSIVE
    ============================================================ */
 @media (max-width: 600px) {
-  :root { --cell-h: 72px; --sidebar-w: 36px; }
-  
+  :root { --cell-h: 80px; --sidebar-w: 36px; }
+
   .course-card .cn  { font-size: 11px; }
-  .course-card .cr  { display: none; }
+  .course-card .cr  { display: block; } /* none → block */
   .period-lbl .pt   { display: none; }
   .period-lbl .pn   { font-size: 13px; }
   .main-content     { padding: 8px 8px 40px; }
