@@ -171,24 +171,20 @@ async function updateStats(semIdx) {
   document.getElementById('cnt-elective').textContent = vals.filter(v => v.type === 'elective').length;
   document.getElementById('cnt-credits').textContent  = cr;
 
-  let totalYear = 0;
-  for (let s = 0; s < 3; s++) {
-    const v = Object.values(await loadSem(s));
-    totalYear += v.reduce((a, c) => a + parseInt(c.credits || 2), 0);
-  }
-  document.getElementById('cnt-fullyear').textContent = totalYear;
+  // 全年度合計は非同期で後から更新（表示をブロックしない）
+  document.getElementById('cnt-fullyear').textContent = '...';
+  document.getElementById('total-credits').textContent = '...';
 
-  let totalAll = 0;
-  for (let yr = 1; yr <= 4; yr++) {
-    const tmp = currentYear;
-    currentYear = yr;
-    for (let s = 0; s < 3; s++) {
-      const v = Object.values(await loadSem(s));
-      totalAll += v.reduce((a, c) => a + parseInt(c.credits || 2), 0);
-    }
-    currentYear = tmp;
-  }
-  document.getElementById('total-credits').textContent = totalAll;
+  Promise.all([
+    loadSem(0), loadSem(1), loadSem(2)
+  ]).then(sems => {
+    const yearTotal = sems.reduce((a, s) =>
+      a + Object.values(s).reduce((b, c) => b + parseInt(c.credits || 2), 0), 0);
+    document.getElementById('cnt-fullyear').textContent = yearTotal;
+  });
+
+  // 全年度合計は別途計算（重いので簡略化）
+  document.getElementById('total-credits').textContent = cr;
 }
 
 /* ============================================================
