@@ -408,5 +408,5 @@ document.getElementById('popup-overlay').addEventListener('click', closePopup);
    INIT
    ============================================================ */
 window.addEventListener('firebaseReady', () => {
-  buildGrid(0);
+  buildGrid(currentSem);
 });
