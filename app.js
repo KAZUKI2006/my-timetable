@@ -31,25 +31,25 @@ function ondemandKey(s) { return `ondemand_sem${s}_year${currentYear}`; }
 
 async function loadSem(s) {
   try {
-    const result = await window.storage.get(storeKey(s));
-    return result ? JSON.parse(result.value) : {};
+    const val = await window.fbGet(storeKey(s));
+    return val ? JSON.parse(val) : {};
   } catch(e) { return {}; }
 }
 
 async function saveSem(s, d) {
-  try { await window.storage.set(storeKey(s), JSON.stringify(d)); }
+  try { await window.fbSet(storeKey(s), JSON.stringify(d)); }
   catch(e) {}
 }
 
 async function loadOndemand(s) {
   try {
-    const result = await window.storage.get(ondemandKey(s));
-    return result ? JSON.parse(result.value) : [];
+    const val = await window.fbGet(ondemandKey(s));
+    return val ? JSON.parse(val) : [];
   } catch(e) { return []; }
 }
 
 async function saveOndemand(s, d) {
-  try { await window.storage.set(ondemandKey(s), JSON.stringify(d)); }
+  try { await window.fbSet(ondemandKey(s), JSON.stringify(d)); }
   catch(e) {}
 }
 
