@@ -160,6 +160,7 @@
     const snap = await get(ref(db, key));
     return snap.exists() ? snap.val() : null;
   };
+  window.dispatchEvent(new Event('firebaseReady'));
 </script>
 <script src="app.js"></script>
 </body>
