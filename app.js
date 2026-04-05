@@ -166,27 +166,53 @@ async function buildOndemand(semIdx) {
    STATS
    ============================================================ */
 async function updateStats(semIdx) {
-  const vals = Object.values(await loadSem(semIdx));
-  const cr   = vals.reduce((a, v) => a + parseInt(v.credits || 2), 0);
-  document.getElementById('cnt-courses').textContent  = vals.length;
-  document.getElementById('cnt-required').textContent = vals.filter(v => v.type === 'required').length;
-  document.getElementById('cnt-elective').textContent = vals.filter(v => v.type === 'elective').length;
+  const [semVals, odVals] = await Promise.all([
+    loadSem(semIdx),
+    loadOndemand(semIdx)
+  ]);
+  
+  const semData = Object.values(semVals);
+  const odData = odVals;
+  const allData = [...semData, ...odData];
+  
+  const cr = allData.reduce((a, v) => a + parseInt(v.credits || 2), 0);
+  document.getElementById('cnt-courses').textContent  = allData.length;
+  document.getElementById('cnt-required').textContent = allData.filter(v => v.type === 'required').length;
+  document.getElementById('cnt-elective').textContent = allData.filter(v => v.type === 'elective').length;
   document.getElementById('cnt-credits').textContent  = cr;
 
-  // 全年度合計は非同期で後から更新（表示をブロックしない）
-  document.getElementById('cnt-fullyear').textContent = '...';
-  document.getElementById('total-credits').textContent = '...';
-
+  // 現在の年度の全セメスター合計（full-year）
   Promise.all([
-    loadSem(0), loadSem(1), loadSem(2)
-  ]).then(sems => {
-    const yearTotal = sems.reduce((a, s) =>
-      a + Object.values(s).reduce((b, c) => b + parseInt(c.credits || 2), 0), 0);
+    loadSem(0), loadSem(1), loadSem(2),
+    loadOndemand(0), loadOndemand(1), loadOndemand(2)
+  ]).then(([s0, s1, s2, od0, od1, od2]) => {
+    const allSems = [
+      ...Object.values(s0), ...Object.values(s1), ...Object.values(s2),
+      ...od0, ...od1, ...od2
+    ];
+    const yearTotal = allSems.reduce((a, c) => a + parseInt(c.credits || 2), 0);
     document.getElementById('cnt-fullyear').textContent = yearTotal;
   });
 
-  // 全年度合計は別途計算（重いので簡略化）
-  document.getElementById('total-credits').textContent = cr;
+  // 全年度・全セメスター合計（ナビバー）
+  const savedYear = currentYear;
+  const allPromises = [];
+  for (let yr = 1; yr <= 4; yr++) {
+    currentYear = yr;
+    for (let s = 0; s < 3; s++) {
+      allPromises.push(loadSem(s));
+      allPromises.push(loadOndemand(s));
+    }
+  }
+  currentYear = savedYear;
+
+  Promise.all(allPromises).then(results => {
+    const totalAll = results.reduce((a, s) => {
+      const vals = Array.isArray(s) ? s : Object.values(s);
+      return a + vals.reduce((b, c) => b + parseInt(c.credits || 2), 0);
+    }, 0);
+    document.getElementById('total-credits').textContent = totalAll;
+  });
 }
 
 /* ============================================================
