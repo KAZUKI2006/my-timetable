@@ -158,9 +158,11 @@
     return snap.exists() ? snap.val() : null;
   };
 
-  // app.jsのbuildGridを呼ぶ
   const script = document.createElement('script');
   script.src = 'app.js';
+  script.onload = () => {
+    window.dispatchEvent(new Event('firebaseReady'));
+  };
   document.body.appendChild(script);
 </script>
 </body>
