@@ -120,8 +120,10 @@ async function buildGrid(semIdx) {
     }
   });
 
-  await updateStats(semIdx);
-  await buildOndemand(semIdx);
+  await Promise.all([
+    updateStats(semIdx),
+    buildOndemand(semIdx)
+  ]);
 }
 
 /* ============================================================
