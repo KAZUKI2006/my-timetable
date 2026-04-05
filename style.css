@@ -570,15 +570,14 @@ body {
    RESPONSIVE
    ============================================================ */
 @media (max-width: 600px) {
-  :root { --cell-h: 58px; --sidebar-w: 36px; }
+  :root { --cell-h: 72px; --sidebar-w: 36px; }
   
-  .course-card .cn  { font-size: 9px; }
+  .course-card .cn  { font-size: 11px; }
   .course-card .cr  { display: none; }
   .period-lbl .pt   { display: none; }
   .period-lbl .pn   { font-size: 13px; }
   .main-content     { padding: 8px 8px 40px; }
   
-  /* stats-panelを2行に */
   .stats-panel {
     flex-wrap: wrap;
     border-radius: 18px;
@@ -602,17 +601,24 @@ body {
     padding: 6px 0;
   }
 
-  /* day headerを短く */
   .day-hd { font-size: 10px; }
-
-  /* sem-pillを小さく */
   .sem-pill {
     font-size: 11px;
     padding: 4px 10px;
   }
-
   .year-select {
     font-size: 12px;
     padding: 4px 10px;
+  }
+
+  /* 横スクロール対応 */
+  .tt-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .tt-grid {
+    grid-template-columns: var(--sidebar-w) repeat(6, 90px);
+    width: max-content;
   }
 }
