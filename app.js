@@ -429,6 +429,21 @@ document.addEventListener('keydown', e => {
 document.getElementById('popup-overlay').addEventListener('click', closePopup);
 
 /* ============================================================
+   MOBILE SCROLL
+   ============================================================ */
+const ttWrap = document.getElementById('tt-wrap');
+if (ttWrap) {
+  ttWrap.addEventListener('scroll', () => {
+    const periodLbls = document.querySelectorAll('.period-lbl');
+    if (ttWrap.scrollLeft > 0) {
+      periodLbls.forEach(el => el.classList.add('sticky-opaque'));
+    } else {
+      periodLbls.forEach(el => el.classList.remove('sticky-opaque'));
+    }
+  }, { passive: true });
+}
+
+/* ============================================================
    INIT
    ============================================================ */
 window.addEventListener('firebaseReady', () => {
