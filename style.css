@@ -382,6 +382,12 @@ body {
 .course-card .cn { font-size: 11.5px; font-weight: 600; line-height: 1.3; color: #1d1d1f; }
 .course-card .cr { font-size: 10px; color: var(--accent); opacity: 0.7; }
 
+.course-card .cn[data-syllabus]:not([data-syllabus=""]) {
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  cursor: pointer;
+}
+
 .course-card .cdot {
   position: absolute; top: 6px; right: 7px;
   width: 8px; height: 8px; border-radius: 50%;
