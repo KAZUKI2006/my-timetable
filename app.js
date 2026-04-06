@@ -100,13 +100,23 @@ async function buildGrid(semIdx) {
         const card = document.createElement('div');
         card.className = 'course-card ' + (TYPE_CLASS[course.type] || 'cc-required');
         card.innerHTML = `
-          <span class="cn">${esc(course.name)}</span>
+          <span class="cn" data-syllabus="${esc(course.syllabus || '')}">${esc(course.name)}</span>
           <span class="cr">${esc(course.room || '')}</span>
           <div class="cdot"></div>
         `;
         card.addEventListener('mouseenter', (e) => showTooltip(e, course));
         card.addEventListener('mousemove',  (e) => moveTooltip(e));
         card.addEventListener('mouseleave', ()  => hideTooltip());
+
+        const cnEl = card.querySelector('.cn');
+        cnEl.addEventListener('click', (e) => {
+          const url = cnEl.dataset.syllabus;
+          if (url) {
+            e.stopPropagation();
+            window.open(url, '_blank');
+          }
+        });
+
         card.addEventListener('click', (e) => {
           e.stopPropagation();
           openEdit(key, course, p, d);
@@ -141,13 +151,23 @@ async function buildOndemand(semIdx) {
     card.style.height = '72px';
     card.style.flexShrink = '0';
     card.innerHTML = `
-      <span class="cn">${esc(course.name)}</span>
+      <span class="cn" data-syllabus="${esc(course.syllabus || '')}">${esc(course.name)}</span>
       <span class="cr">${esc(course.room || '')}</span>
       <div class="cdot"></div>
     `;
     card.addEventListener('mouseenter', (e) => showTooltip(e, course));
     card.addEventListener('mousemove',  (e) => moveTooltip(e));
     card.addEventListener('mouseleave', ()  => hideTooltip());
+
+    const cnEl = card.querySelector('.cn');
+    cnEl.addEventListener('click', (e) => {
+      const url = cnEl.dataset.syllabus;
+      if (url) {
+        e.stopPropagation();
+        window.open(url, '_blank');
+      }
+    });
+
     card.addEventListener('click', (e) => {
       e.stopPropagation();
       openEditOndemand(idx, course);
