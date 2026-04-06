@@ -637,4 +637,8 @@ body {
     z-index: 4;
     background: rgba(238,237,254,0.45);
   }
+
+  .period-lbl.sticky-opaque {
+    background: rgba(220, 230, 245, 0.92);
+  }
 }
